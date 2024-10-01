@@ -1,5 +1,6 @@
 import flet as ft
 import pyshorteners
+import pyshorteners.shorteners.tinyurl
 import validators
 import pyperclip
 import webbrowser
