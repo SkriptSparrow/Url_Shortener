@@ -65,6 +65,20 @@ def main(page: ft.Page):
             snack_bar.open = True
             page.update()
 
+    def clear_text(url):
+        if url_input_field.value:
+            url_input_field.value = ""
+            url_input_field.update()
+            page.update()
+        else:
+            snack_bar = ft.SnackBar(ft.Text("Nothing to clear!"),
+                                    bgcolor=ft.colors.BLACK,
+                                    duration=1000)
+            page.overlay.append(snack_bar)
+            snack_bar.open = True
+            page.update()
+
+
     # Copy function to clipboard, displays a copy message
     def copy_to_clipboard(url):
         if short_url_field.value:
@@ -235,11 +249,23 @@ def main(page: ft.Page):
         style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8))
     )
 
+    # Button to clear a long URL
+    clear_button = ft.ElevatedButton(
+        "CLEAR",
+        color= '#EB244E',
+        on_click=lambda e: clear_text(url_input_field.value),
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8),
+                             text_style=ft.TextStyle(
+                                 font_family="Rubik",
+                                 size=18)
+                             )
+    )
+
     # Container for buttons (arranged in a row with a certain distance)
     button_row = ft.Row(
-        controls=[shorten_button, copy_button],
+        controls=[shorten_button, clear_button, copy_button],
         alignment=ft.MainAxisAlignment.CENTER,
-        spacing=190,
+        spacing=44,
         width=350
     )
 
