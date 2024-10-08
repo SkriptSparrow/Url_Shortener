@@ -174,7 +174,9 @@ def main(page: ft.Page):
     margin_botton1 = ft.Container(height=5, width=400)
 
     # Scissors icon for the header
-    image = ft.Image(src="../img/icon scissors.png", width=150, height=150)
+    image = ft.Image(src="C:\\Users\\Asus\\PycharmProjects\\URLshortener\\img\\icon scissors.png",
+                     width=150,
+                     height=150)
 
     # Download Rubik font
     page.fonts = {"Rubik": "../fonts/rubik/Rubik-Medium.ttf"}
@@ -243,7 +245,7 @@ def main(page: ft.Page):
 
     # Signature with text, center alignment
     footer = ft.Text(
-        "DEVELOPED BY ALEX_GICHEVA",
+        "DEVELOPED BY CODEBIRD",
         color=ft.colors.GREY_500,
         width=350,
         text_align=ft.TextAlign.CENTER,
