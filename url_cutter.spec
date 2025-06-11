@@ -2,10 +2,10 @@
 
 
 a = Analysis(
-    ['main.py'],
+    ['url_cutter.py'],
     pathex=[],
     binaries=[],
-    datas=[('img/icon scissors.png', '.')],
+    datas=[('C:\\Users\\Asus\\PycharmProjects\\Apps\\Url_Cutter\\fonts', '.'), ('C:\\Users\\Asus\\PycharmProjects\\Apps\\Url_Cutter\\img\\icon scissors.png', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='main',
+    name='url_cutter',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -35,5 +35,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['img\\icon.ico'],
+    icon=['C:\\Users\\Asus\\PycharmProjects\\Apps\\Url_Cutter\\img\\icon.ico'],
 )
