@@ -27,8 +27,12 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
     page.theme = ft.Theme(
         color_scheme=ft.ColorScheme(
+<<<<<<< HEAD:main.py
             primary=ft.colors.RED,
             primary_container=ft.colors.RED_200
+=======
+            primary=ft.Colors.RED,
+>>>>>>> b441be0 (Сохраняю локальные изменения перед обновлением):url_cutter.py
         ),
     )
 
@@ -188,7 +192,11 @@ def main(page: ft.Page):
     margin_botton1 = ft.Container(height=5, width=400)
 
     # Scissors icon for the header
+<<<<<<< HEAD:main.py
     image = ft.Image(src="C:\\Users\\Asus\\PycharmProjects\\URLshortener\\img\\icon scissors.png",
+=======
+    image = ft.Image(src="C:\\Users\\Administrator\\PycharmProjects\\Apps\\Url_Cutter\\img\\icon scissors.png",
+>>>>>>> b441be0 (Сохраняю локальные изменения перед обновлением):url_cutter.py
                      width=150,
                      height=150)
 
@@ -212,18 +220,35 @@ def main(page: ft.Page):
     # Field for entering a long URL
     url_input_field = ft.TextField(
         label="Input long URL",
+<<<<<<< HEAD:main.py
         height=60,
         width=350,
         suffix=ft.IconButton(
             icon=ft.icons.CONTENT_PASTE,
             on_click=on_paste_click)
+=======
+        label_style=ft.TextStyle(color='#EB244E'),
+        height=50,
+        width=350,
+        suffix=ft.IconButton(
+            icon=ft.Icons.CONTENT_PASTE,
+            on_click=on_paste_click),
+        border_color='#EB244E',
+>>>>>>> b441be0 (Сохраняю локальные изменения перед обновлением):url_cutter.py
     )
 
     # Field for outputting a short URL
     short_url_field = ft.TextField(
         label="Short URL",
+        label_style=ft.TextStyle(color='#EB244E'),
         read_only=True,
+<<<<<<< HEAD:main.py
         width=350
+=======
+        height=60,
+        width=350,
+        border_color='#EB244E',
+>>>>>>> b441be0 (Сохраняю локальные изменения перед обновлением):url_cutter.py
     )
 
     # URL shortening button with a slight rounding effect
@@ -231,6 +256,11 @@ def main(page: ft.Page):
         "CUT",
         color=ft.colors.WHITE,
         bgcolor='#EB244E',
+<<<<<<< HEAD:main.py
+=======
+        height=40,
+        width=90,
+>>>>>>> b441be0 (Сохраняю локальные изменения перед обновлением):url_cutter.py
         on_click=lambda e: shorten_url(),
         style=ft.ButtonStyle(
             shape=ft.RoundedRectangleBorder(radius=8),
@@ -245,6 +275,11 @@ def main(page: ft.Page):
     copy_button = ft.ElevatedButton(
         content=ft.Icon(ft.icons.CONTENT_COPY),
         color='#EB244E',
+<<<<<<< HEAD:main.py
+=======
+        height=40,
+        width=80,
+>>>>>>> b441be0 (Сохраняю локальные изменения перед обновлением):url_cutter.py
         on_click=lambda e: copy_to_clipboard(short_url_field.value),
         style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8))
     )
@@ -252,7 +287,13 @@ def main(page: ft.Page):
     # Button to clear a long URL
     clear_button = ft.ElevatedButton(
         "CLEAR",
+<<<<<<< HEAD:main.py
         color= '#EB244E',
+=======
+        color='#EB244E',
+        height=40,
+        width=110,
+>>>>>>> b441be0 (Сохраняю локальные изменения перед обновлением):url_cutter.py
         on_click=lambda e: clear_text(url_input_field.value),
         style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8),
                              text_style=ft.TextStyle(
@@ -261,11 +302,30 @@ def main(page: ft.Page):
                              )
     )
 
+    # Left container with only the shorten button
+    left_container = ft.Column(
+        controls=[shorten_button],
+        width=90,  # Adjust as necessary
+        alignment=ft.MainAxisAlignment.START
+    )
+
+    # Right container with clear and copy buttons
+    right_container = ft.Row(
+        controls=[clear_button, copy_button],
+        spacing=10,
+        width=200,  # Adjust as necessary
+        alignment=ft.MainAxisAlignment.END
+    )
+
     # Container for buttons (arranged in a row with a certain distance)
     button_row = ft.Row(
-        controls=[shorten_button, clear_button, copy_button],
+        controls=[left_container, right_container],
         alignment=ft.MainAxisAlignment.CENTER,
+<<<<<<< HEAD:main.py
         spacing=44,
+=======
+        spacing=60,
+>>>>>>> b441be0 (Сохраняю локальные изменения перед обновлением):url_cutter.py
         width=350
     )
 
