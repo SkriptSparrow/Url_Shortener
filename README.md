@@ -34,7 +34,7 @@ pip install flet pyshorteners
 
 3. Запустите приложение:
 
-python main.py
+python url_cutter.py
 
 ## 📸 Скриншоты
 
