@@ -38,7 +38,7 @@ python url_cutter.py
 
 ## 📸 Скриншоты
 
-![Вид приложения](./screenshots/app.png)
+![Вид приложения]([https://i.ibb.co/LXN1Z5dq/app.png])
 
 ## 📫 Контакты
 
