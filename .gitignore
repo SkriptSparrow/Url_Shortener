@@ -38,3 +38,4 @@ UrlCutter_dbg.exe
 # Flet cache
 .flet/
 
+url_cutter.py

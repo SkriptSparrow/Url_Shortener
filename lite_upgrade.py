@@ -2,6 +2,20 @@
 from __future__ import annotations
 import os
 from concurrent.futures import ThreadPoolExecutor
+import pyshorteners  # <-- сделать импорт модульным, не внутри функций
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as _TimeoutError
+
+
+# Публичные атрибуты для тестов:
+FutTimeout = _TimeoutError
+# ThreadPoolExecutor уже импортирован ИМЕНЕМ модуля, это тоже публично
+
+__all__ = [
+    "FutTimeout",
+    "ThreadPoolExecutor",
+    "pyshorteners",
+    # добавь сюда свои публичные функции/объекты, если нужно
+]
 
 # ядро
 from urlcutter import normalize_url, _url_fingerprint

@@ -4,19 +4,18 @@
 """
 
 from __future__ import annotations
-import requests
+
+from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 
 # stdlib
-from concurrent.futures import ThreadPoolExecutor
-from typing import Callable, Optional
 from urllib.parse import quote, urlparse
 
-# 3rd party
 import requests
 
+# 3rd party
 # local
 from urlcutter import normalize_url
-
 
 __all__ = ["shorten_via_tinyurl_core"]
 
@@ -30,11 +29,11 @@ def _looks_like_url(s: str) -> bool:
 
 def shorten_via_tinyurl_core(
     url: str,
-    timeout: Optional[float] = None,
+    timeout: float | None = None,
     *,
-    _get: Optional[Callable[..., object]] = None,
-    _shortener_factory: Optional[Callable[[], object]] = None,
-    _pool_factory: Optional[Callable[..., ThreadPoolExecutor]] = None,
+    _get: Callable[..., object] | None = None,
+    _shortener_factory: Callable[[], object] | None = None,
+    _pool_factory: Callable[..., ThreadPoolExecutor] | None = None,
 ) -> str:
     """Return a TinyURL short link for `url`.
 
@@ -78,6 +77,7 @@ def shorten_via_tinyurl_core(
         shortener_factory = _shortener_factory
         if shortener_factory is None:
             import pyshorteners  # local import to avoid unused dep when not needed
+
             shortener_factory = pyshorteners.Shortener
 
         shortener = shortener_factory()
@@ -88,7 +88,9 @@ def shorten_via_tinyurl_core(
 
         pool_factory = _pool_factory or ThreadPoolExecutor
         with pool_factory(max_workers=1) as pool:
-            fut = pool.submit(tiny.short, norm)
+            from functools import partial
+
+            fut = pool.submit(partial(tiny.short, norm))
             return fut.result(timeout=timeout)
 
     except TimeoutError:
