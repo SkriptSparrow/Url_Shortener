@@ -1,41 +1,39 @@
-# venv & caches
+# --- Python venv & caches ---
 .venv/
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- Test / coverage ---
 .pytest_cache/
 .ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
 
-# build / dist artifacts
+# --- Build / distribution (PyInstaller, setuptools, wheel) ---
 build/
 dist/
 *.egg-info/
+*.spec
+*.exe
 
-# coverage / reports
-htmlcov/
-.coverage
-.coverage.*
-coverage.xml
-
-# logs / temp / screenshots
+# --- Logs / temp ---
 logs/
-screenshots/
+*.log
 debug_log.txt
 
-# editor / OS & IDE
+# --- IDE / editor ---
 .idea/
 .vscode/
+*.iml
+
+# --- OS specific ---
 .DS_Store
 Thumbs.db
 
-# Python bytecode
-*.pyc
-*.pyo
-
-# PyInstaller
-*.spec
-UrlCutter.exe
-UrlCutter_dbg.exe
-
-# Flet cache
-.flet/
-
-url_cutter.py
+# --- Project specific ---
+screenshots/
+scripts/packaging/
