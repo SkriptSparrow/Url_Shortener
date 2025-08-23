@@ -1,2 +1,40 @@
-.idea/
+# venv & caches
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+
+# build / dist artifacts
+build/
+dist/
+*.egg-info/
+
+# coverage / reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# logs / temp / screenshots
+logs/
+screenshots/
 debug_log.txt
+
+# editor / OS & IDE
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Python bytecode
+*.pyc
+*.pyo
+
+# PyInstaller
+*.spec
+UrlCutter.exe
+UrlCutter_dbg.exe
+
+# Flet cache
+.flet/
+
