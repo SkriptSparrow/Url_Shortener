@@ -1,9 +1,10 @@
+import webbrowser
+
 import flet as ft
+import pyperclip
 import pyshorteners
 import pyshorteners.shorteners.tinyurl
 import validators
-import pyperclip
-import webbrowser
 
 
 def main(page: ft.Page):
@@ -26,10 +27,7 @@ def main(page: ft.Page):
     # Page design theme
     page.theme_mode = ft.ThemeMode.DARK
     page.theme = ft.Theme(
-        color_scheme=ft.ColorScheme(
-            primary=ft.Colors.WHITE,
-            primary_container='#3C1E68'
-        ),
+        color_scheme=ft.ColorScheme(primary=ft.Colors.WHITE, primary_container="#3C1E68"),
     )
 
     # Paste button handler
@@ -43,9 +41,7 @@ def main(page: ft.Page):
     def shorten_url():
         long_url = url_input_field.value
         if long_url.startswith("https://tinyurl.com"):
-            snack_bar = ft.SnackBar(ft.Text("This is already a shortened URL."),
-                                    bgcolor=ft.Colors.BLACK,
-                                    duration=1000)
+            snack_bar = ft.SnackBar(ft.Text("This is already a shortened URL."), bgcolor=ft.Colors.BLACK, duration=1000)
             page.overlay.append(snack_bar)
             snack_bar.open = True
             page.update()
@@ -58,9 +54,7 @@ def main(page: ft.Page):
             page.update()
         else:
             # Display an error message or show the SnackBar
-            snack_bar = ft.SnackBar(ft.Text("Incorrect URL, try again."),
-                                    bgcolor=ft.Colors.BLACK,
-                                    duration=1000)
+            snack_bar = ft.SnackBar(ft.Text("Incorrect URL, try again."), bgcolor=ft.Colors.BLACK, duration=1000)
             page.overlay.append(snack_bar)
             snack_bar.open = True
             page.update()
@@ -71,9 +65,7 @@ def main(page: ft.Page):
             url_input_field.update()
             page.update()
         else:
-            snack_bar = ft.SnackBar(ft.Text("Nothing to clear!"),
-                                    bgcolor=ft.Colors.BLACK,
-                                    duration=1000)
+            snack_bar = ft.SnackBar(ft.Text("Nothing to clear!"), bgcolor=ft.Colors.BLACK, duration=1000)
             page.overlay.append(snack_bar)
             snack_bar.open = True
             page.update()
@@ -82,17 +74,13 @@ def main(page: ft.Page):
     def copy_to_clipboard(url):
         if short_url_field.value:
             page.set_clipboard(url)
-            snack_bar = ft.SnackBar(ft.Text("Copied to clipboard!"),
-                                    bgcolor=ft.Colors.BLACK,
-                                    duration=1000)
+            snack_bar = ft.SnackBar(ft.Text("Copied to clipboard!"), bgcolor=ft.Colors.BLACK, duration=1000)
             page.overlay.append(snack_bar)
             snack_bar.open = True
             page.update()
         else:
             page.set_clipboard(url)
-            snack_bar = ft.SnackBar(ft.Text("Nothing to copy!"),
-                                    bgcolor=ft.Colors.BLACK,
-                                    duration=1000)
+            snack_bar = ft.SnackBar(ft.Text("Nothing to copy!"), bgcolor=ft.Colors.BLACK, duration=1000)
             page.overlay.append(snack_bar)
             snack_bar.open = True
             page.update()
@@ -117,29 +105,27 @@ def main(page: ft.Page):
                         tooltip="Email",
                         height=30,
                         width=30,
-                        on_click=lambda e: open_link("mailto:alexgicheva@gmail.com")
+                        on_click=lambda e: open_link("mailto:alexgicheva@gmail.com"),
                     ),
                     ft.IconButton(
                         icon=ft.Icons.SEND,
                         tooltip="Telegram",
                         height=30,
                         width=30,
-                        on_click=lambda e: open_link("https://t.me/Alex_Gicheva")
+                        on_click=lambda e: open_link("https://t.me/Alex_Gicheva"),
                     ),
                     ft.IconButton(
                         icon=ft.Icons.CODE,
                         tooltip="GitHub",
                         height=30,
                         width=30,
-                        on_click=lambda e: open_link("https://github.com/SkriptSparrow")
-                    )
+                        on_click=lambda e: open_link("https://github.com/SkriptSparrow"),
+                    ),
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
-                spacing=20
+                spacing=20,
             ),
-            actions=[
-                ft.TextButton("OK", on_click=lambda e: close_dialog(dialog))
-            ]
+            actions=[ft.TextButton("OK", on_click=lambda e: close_dialog(dialog))],
         )
         page.overlay.append(dialog)
         dialog.open = True
@@ -161,22 +147,13 @@ def main(page: ft.Page):
     minimize_button = ft.IconButton(ft.Icons.REMOVE, on_click=minimize_window)
 
     # Drag area for window
-    drag_area = ft.WindowDragArea(
-        ft.Container(height=50, width=1000),
-        expand=True,
-        maximizable=False
-    )
+    drag_area = ft.WindowDragArea(ft.Container(height=50, width=1000), expand=True, maximizable=False)
 
     # Custom title bar (you can style it as you like)
     title_bar = ft.Row(
-        controls=[
-            maximize_button,
-            drag_area,
-            minimize_button,
-            close_button
-        ],
+        controls=[maximize_button, drag_area, minimize_button, close_button],
         alignment=ft.MainAxisAlignment.END,
-        vertical_alignment=ft.CrossAxisAlignment.CENTER
+        vertical_alignment=ft.CrossAxisAlignment.CENTER,
     )
 
     # Indents for separating interface elements
@@ -187,18 +164,16 @@ def main(page: ft.Page):
     margin_botton1 = ft.Container(height=5, width=400)
 
     # Scissors icon for the header
-    image = ft.Image(src="C:\\Users\\Asus\\PycharmProjects\\Apps\\Url_Cutter\\icon scissors_1.png",
-                     width=250,
-                     height=250)
+    image = ft.Image(
+        src="C:\\Users\\Asus\\PycharmProjects\\Apps\\Url_Cutter\\icon scissors_1.png",
+        width=250,
+        height=250,
+    )
 
     # Download Rubik font
     page.fonts = {"Rubik": "../fonts/rubik/Rubik-Medium.ttf"}
 
-    name_elem = ft.Text(
-            "URL CUTTER",
-            font_family="Rubik",
-            size=26,
-            weight=ft.FontWeight.BOLD)
+    name_elem = ft.Text("URL CUTTER", font_family="Rubik", size=26, weight=ft.FontWeight.BOLD)
 
     # Container with icon and title (center alignment)
     header_col = ft.Column(
@@ -206,7 +181,7 @@ def main(page: ft.Page):
         alignment=ft.MainAxisAlignment.START,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         width=400,
-        spacing=0
+        spacing=0,
     )
 
     # Field for entering a long URL
@@ -214,58 +189,47 @@ def main(page: ft.Page):
         label="Input long URL",
         height=50,
         width=350,
-        suffix=ft.IconButton(
-            icon=ft.Icons.CONTENT_PASTE,
-            on_click=on_paste_click)
+        suffix=ft.IconButton(icon=ft.Icons.CONTENT_PASTE, on_click=on_paste_click),
     )
 
     # Field for outputting a short URL
-    short_url_field = ft.TextField(
-        label="Short URL",
-        read_only=True,
-        height=60,
-        width=350
-    )
+    short_url_field = ft.TextField(label="Short URL", read_only=True, height=60, width=350)
 
     # URL shortening button with a slight rounding effect
     shorten_button = ft.ElevatedButton(
         "CUT",
         color=ft.Colors.WHITE,
-        bgcolor='#3C1E68',
+        bgcolor="#3C1E68",
         height=40,
         width=70,
         on_click=lambda e: shorten_url(),
         style=ft.ButtonStyle(
             shape=ft.RoundedRectangleBorder(radius=8),
-            text_style=ft.TextStyle(
-                font_family="Rubik",
-                size=18
-            )
-        )
+            text_style=ft.TextStyle(font_family="Rubik", size=18),
+        ),
     )
 
     # Button to copy a short URL
     copy_button = ft.ElevatedButton(
         content=ft.Icon(ft.Icons.CONTENT_COPY),
-        bgcolor='#3C1E68',
+        bgcolor="#3C1E68",
         height=40,
         width=70,
         on_click=lambda e: copy_to_clipboard(short_url_field.value),
-        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8))
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8)),
     )
 
     # Button to clear a long URL
     clear_button = ft.ElevatedButton(
         "CLEAR",
         color=ft.Colors.WHITE,
-        bgcolor='#3C1E68',
+        bgcolor="#3C1E68",
         height=40,
         on_click=lambda e: clear_text(url_input_field.value),
-        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=8),
-                             text_style=ft.TextStyle(
-                                 font_family="Rubik",
-                                 size=18)
-                             )
+        style=ft.ButtonStyle(
+            shape=ft.RoundedRectangleBorder(radius=8),
+            text_style=ft.TextStyle(font_family="Rubik", size=18),
+        ),
     )
 
     # Container for buttons (arranged in a row with a certain distance)
@@ -273,7 +237,7 @@ def main(page: ft.Page):
         controls=[shorten_button, clear_button, copy_button],
         alignment=ft.MainAxisAlignment.CENTER,
         spacing=68,
-        width=350
+        width=350,
     )
 
     # Signature with text, center alignment
@@ -288,14 +252,23 @@ def main(page: ft.Page):
     footer_container = ft.Column(
         controls=[footer],
         alignment=ft.MainAxisAlignment.END,
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
     )
 
     violet_container = ft.Container(
         content=ft.Column(
-            controls=[margin_img_txt, name_elem, margin_middle,
-                      url_input_field, short_url_field, button_row,
-                      margin_botton, footer_container, margin_middle, margin_middle],
+            controls=[
+                margin_img_txt,
+                name_elem,
+                margin_middle,
+                url_input_field,
+                short_url_field,
+                button_row,
+                margin_botton,
+                footer_container,
+                margin_middle,
+                margin_middle,
+            ],
             alignment=ft.MainAxisAlignment.CENTER,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             spacing=5,
@@ -305,18 +278,17 @@ def main(page: ft.Page):
         gradient=ft.LinearGradient(
             colors=["#33185C", "#613C9D", "#7048B3"],
             begin=ft.alignment.top_left,
-            end=ft.alignment.bottom_right
+            end=ft.alignment.bottom_right,
         ),
-        width=445
+        width=445,
     )
-
 
     # A common container containing all the elements of a page
     content = ft.Column(
         controls=[title_bar, margin_top, image, violet_container],
         alignment=ft.MainAxisAlignment.CENTER,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-        spacing=10
+        spacing=10,
     )
 
     # Adding a container to a page with vertical alignment
@@ -325,7 +297,7 @@ def main(page: ft.Page):
             controls=[content],
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            height=page.window.height
+            height=page.window.height,
         )
     )
 
