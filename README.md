@@ -92,6 +92,7 @@ pyinstaller lite_upgrade.py --name UrlCutter --windowed --onefile ^
 Смотри [Releases](https://github.com/SkriptSparrow/Url_Shortener/releases).
 
 Скачать последнюю версию: [➡️ Latest release](https://github.com/SkriptSparrow/Url_Shortener/releases/latest)
+
 ---
 
 
