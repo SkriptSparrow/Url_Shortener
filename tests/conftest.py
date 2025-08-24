@@ -1,4 +1,7 @@
+from concurrent.futures import TimeoutError
+
 import pytest
+
 
 @pytest.fixture
 def fake_shortener_ok_factory():
@@ -7,10 +10,14 @@ def fake_shortener_ok_factory():
         class FakeTiny:
             def short(self, url: str) -> str:
                 return "https://tiny.one/abc123"
+
         class FakeShortener:
             tinyurl = FakeTiny()
+
         return FakeShortener()
+
     return _factory
+
 
 @pytest.fixture
 def fake_shortener_boom_factory():
@@ -18,15 +25,18 @@ def fake_shortener_boom_factory():
         class FakeTiny:
             def short(self, url: str) -> str:
                 raise RuntimeError("boom")
+
         class FakeShortener:
             tinyurl = FakeTiny()
+
         return FakeShortener()
+
     return _factory
+
 
 @pytest.fixture
 def fake_pool_timeout_factory():
     # Пул, у которого future.result(...) всегда кидает TimeoutError
-    from concurrent.futures import TimeoutError
 
     class FakeFuture:
         def result(self, timeout):
@@ -35,14 +45,17 @@ def fake_pool_timeout_factory():
     class FakePool:
         def __enter__(self):
             return self
+
         def __exit__(self, *a):
             pass
+
         def submit(self, fn, *args, **kwargs):
             return FakeFuture()
 
     # Возвращаем нулеарг. callable, чтобы выглядеть как ThreadPoolExecutor(max_workers=?)
     def _factory(*args, **kwargs):
         return FakePool()
+
     return _factory
 
 
@@ -53,9 +66,12 @@ def fake_shortener_assert_not_called_factory():
         class FakeTiny:
             def short(self, url: str) -> str:
                 raise AssertionError("Provider MUST NOT be called for invalid input")
+
         class FakeShortener:
             tinyurl = FakeTiny()
+
         return FakeShortener()
+
     return _factory
 
 
@@ -67,9 +83,12 @@ def fake_shortener_expect_url_factory():
             def short(self, url: str) -> str:
                 assert url == expected_url, f"expected {expected_url}, got {url!r}"
                 return "https://tiny.one/abc123"
+
         class FakeShortener:
             tinyurl = FakeTiny()
+
         return FakeShortener()
+
     return _factory
 
 
@@ -82,14 +101,19 @@ def fake_pool_capturing_timeout_factory():
     class FakeFuture:
         def __init__(self, value):
             self._value = value
+
         def result(self, timeout):
             captured["timeout"] = timeout
             captured["calls"] += 1
             return self._value
 
     class FakePool:
-        def __enter__(self): return self
-        def __exit__(self, *a): pass
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            pass
+
         def submit(self, fn, *args, **kwargs):
             # выполняем сразу и кладём результат во future
             return FakeFuture(fn(*args, **kwargs))
@@ -99,4 +123,3 @@ def fake_pool_capturing_timeout_factory():
         return FakePool(), captured
 
     return _factory
-

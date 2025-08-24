@@ -1,11 +1,15 @@
-import flet as ft
-import logging, pyperclip, webbrowser, validators
-from urllib.parse import urlparse
+import logging
+import webbrowser
 from concurrent.futures import TimeoutError as FutTimeout
+from urllib.parse import urlparse
 
-from lite_upgrade import internet_ok, shorten_via_tinyurl
-from urlcutter import AppState, CLIENT_RPM_LIMIT, _url_fingerprint
+import flet as ft
+import pyperclip
+import validators
 
+from urlcutter import CLIENT_RPM_LIMIT, AppState, _url_fingerprint
+from urlcutter.protection import internet_ok
+from urlcutter.shorteners import shorten_via_tinyurl_core as shorten_via_tinyurl
 
 REQUEST_TIMEOUT = 8.0
 RETRIES = 1
@@ -21,7 +25,7 @@ def _safe_fp(s: str) -> str:
 
 
 class Handlers:
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         page: ft.Page,
         logger: logging.Logger,
@@ -147,7 +151,7 @@ class Handlers:
         self.page.update()
 
     # Главный сценарий: валидация → защита → вызов сервиса → вывод
-    def on_shorten(self, _):
+    def on_shorten(self, _):  # noqa: PLR0911, PLR0912, PLR0915
         long_url = self.url_input_field.value.strip()
 
         # безопасный лог, чтобы не падать на пустых строках
@@ -168,8 +172,7 @@ class Handlers:
         if not is_valid:
             self.toast("Incorrect URL. Check the link.")
             self.logger.info(
-                "shorten_reject reason=invalid_url url=%s",
-                _safe_fp(long_url)  # ← тоже безопасно логируем
+                "shorten_reject reason=invalid_url url=%s", _safe_fp(long_url)  # ← тоже безопасно логируем
             )
             return
 

@@ -1,6 +1,9 @@
-# urlcutter/normalization.py
-from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
 import hashlib
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+
+HTTP_DEFAULT_PORT = 80
+HTTPS_DEFAULT_PORT = 443
+
 
 def _url_fingerprint(url: str) -> str:
     if url is None:
@@ -14,6 +17,7 @@ def _url_fingerprint(url: str) -> str:
 
     digest = hashlib.sha1(s.encode("utf-8")).hexdigest()
     return digest
+
 
 def normalize_url(s: str) -> str:
     s = str(s)
@@ -36,7 +40,9 @@ def normalize_url(s: str) -> str:
 
     hostname = (parts.hostname or "").lower()
     port = parts.port
-    if port and ((scheme == "http" and port == 80) or (scheme == "https" and port == 443)):
+    if port and (
+        (scheme == "http" and port == HTTP_DEFAULT_PORT) or (scheme == "https" and port == HTTPS_DEFAULT_PORT)
+    ):
         netloc = hostname
     else:
         netloc = hostname if port is None else f"{hostname}:{port}"

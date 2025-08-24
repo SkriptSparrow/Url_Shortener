@@ -1,26 +1,28 @@
-from collections import deque
-from typing import Callable
-import time
 import logging
+import time
+from collections import deque
+from collections.abc import Callable
 
 # --- Константы поведения ---
-CLIENT_RPM_LIMIT = 60           # сколько запросов в минуту разрешено
-CB_FAIL_THRESHOLD = 3           # после скольких подряд ошибок открываем предохранитель
-CB_COOLDOWN_SEC = 30            # сколько секунд держим «открытым»
+CLIENT_RPM_LIMIT = 60  # сколько запросов в минуту разрешено
+CB_FAIL_THRESHOLD = 3  # после скольких подряд ошибок открываем предохранитель
+CB_COOLDOWN_SEC = 30  # сколько секунд держим «открытым»
 CIRCUIT_FAIL_THRESHOLD = 3  # сколько подряд ошибок, чтобы "остановиться"
 CIRCUIT_COOLDOWN_SEC = 60  # на сколько секунд "остановиться" (cooldown)
 RATE_LIMIT_WINDOW_SEC = 60
 
 # --- Глобальное состояние (простое и прозрачное) ---
 _state = {
-    "ticks": deque(),           # таймстемпы успешных выдач для rate-limit
-    "fail_count": 0,            # счётчик подряд идущих ошибок
-    "cb_open_until": 0.0,       # unix-время, до которого предохранитель «открыт»
+    "ticks": deque(),  # таймстемпы успешных выдач для rate-limit
+    "fail_count": 0,  # счётчик подряд идущих ошибок
+    "cb_open_until": 0.0,  # unix-время, до которого предохранитель «открыт»
 }
+
 
 # Тестовые служебные функции (экспортируем для фикстур)
 def _get_state():
     return _state
+
 
 def _reset_state():
     _state["ticks"].clear()
@@ -61,17 +63,19 @@ class AppState:
 
 
 def _now_default() -> float:
-    import time
     return time.time()
+
 
 def circuit_blocked(*, now_fn: Callable[[], float] = _now_default) -> bool:
     now = now_fn()
     return now < _state["cb_open_until"]
 
+
 def cooldown_left(*, now_fn: Callable[[], float] = _now_default) -> int:
     now = now_fn()
     left = int(round(_state["cb_open_until"] - now))
     return max(0, left)
+
 
 def record_failure(*, now_fn: Callable[[], float] = _now_default) -> None:
     now = now_fn()
@@ -83,9 +87,11 @@ def record_failure(*, now_fn: Callable[[], float] = _now_default) -> None:
         _state["cb_open_until"] = now + CB_COOLDOWN_SEC
         _state["fail_count"] = 0  # сбросим, чтобы после окна считать заново
 
+
 def record_success() -> None:
     # Любой успешный вызов сбрасывает счётчик ошибок
     _state["fail_count"] = 0
+
 
 def rate_limit_allow(*, now_fn: Callable[[], float] = _now_default) -> bool:
     """
