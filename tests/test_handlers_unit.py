@@ -1,4 +1,5 @@
 import types
+
 import pytest
 
 import urlcutter.handlers as H
@@ -55,15 +56,19 @@ class DummyPage:
 
 class DummyLogger:
     def __getattr__(self, name):
-        def _noop(*_a, **_k): pass
+        def _noop(*_a, **_k):
+            pass
 
         return _noop
 
 
 class Btn:
-    def __init__(self): self.on_click = None; self.disabled = False
+    def __init__(self):
+        self.on_click = None
+        self.disabled = False
 
-    def update(self): pass
+    def update(self):
+        pass
 
 
 class Field:
@@ -73,11 +78,14 @@ class Field:
         self.visible = True
         self.error_text = None
 
-    def update(self): pass
+    def update(self):
+        pass
 
-    def focus(self): pass
+    def focus(self):
+        pass
 
-    def select_all(self): pass
+    def select_all(self):
+        pass
 
     # некоторые реализации вызывают clear/clean
     def clear(self):
@@ -124,9 +132,7 @@ def make_handlers(monkeypatch, *, net_ok=True, short_value="https://tinyurl.com/
                 return False
             # Определенные плохие URL - невалидны
             bad_urls = ["not a url", "ftp://host", "http:/broken", "https://"]
-            if url in bad_urls:
-                return False
-            return True  # остальные считаем валидными
+            return url not in bad_urls
 
         monkeypatch.setattr("validators.url", mock_validators_url, raising=False)
 
@@ -141,8 +147,9 @@ def make_handlers(monkeypatch, *, net_ok=True, short_value="https://tinyurl.com/
 
 
 def test_on_shorten_success(monkeypatch):
-    h, page, url_inp, short_out, shorten_btn, _ = make_handlers(monkeypatch, net_ok=True,
-                                                                short_value="https://tinyurl.com/ok")
+    h, page, url_inp, short_out, shorten_btn, _ = make_handlers(
+        monkeypatch, net_ok=True, short_value="https://tinyurl.com/ok"
+    )
 
     h.on_shorten(None)
 
@@ -199,10 +206,13 @@ def test_window_buttons(monkeypatch):
     h.on_close(None)  # просто не должно кидать
 
 
-@pytest.mark.parametrize("value,msg", [
-    ("", "Enter the link."),
-    ("   ", "Enter the link."),
-])
+@pytest.mark.parametrize(
+    "value,msg",
+    [
+        ("", "Enter the link."),
+        ("   ", "Enter the link."),
+    ],
+)
 def test_on_shorten_empty(monkeypatch, value, msg):
     h, page, url_inp, short_out, _, _ = make_handlers(monkeypatch, mock_validation=True)
     url_inp.value = value
@@ -275,7 +285,8 @@ def test_on_shorten_provider_error(monkeypatch):
     # internet_ok True, но провайдер падает
     monkeypatch.setattr("urlcutter.handlers.internet_ok", lambda _lg: True, raising=False)
 
-    def boom(url, timeout=None): raise RuntimeError("provider down")
+    def boom(url, timeout=None):
+        raise RuntimeError("provider down")
 
     monkeypatch.setattr("urlcutter.handlers.shorten_via_tinyurl", boom, raising=False)
 

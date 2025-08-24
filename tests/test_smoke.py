@@ -1,2 +1,5 @@
-def test_basic_math():
-    assert 2 + 2 == 4
+import lite_upgrade
+
+
+def test_import_package():
+    assert lite_upgrade is not None

@@ -1,5 +1,6 @@
-import flet as ft
 import importlib.resources as res
+
+import flet as ft
 
 
 def configure_window_and_theme(page: ft.Page):

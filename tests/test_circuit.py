@@ -1,37 +1,67 @@
 import pytest
+
 from lite_upgrade import AppState
+from urlcutter.protection import (
+    CB_COOLDOWN_SEC,
+    CB_FAIL_THRESHOLD,
+    CLIENT_RPM_LIMIT,
+    _reset_state,  # служебные, только для тестов
+    circuit_blocked,
+    cooldown_left,
+    rate_limit_allow,
+    record_failure,
+    record_success,
+)
 
 # --- ВСПОМОГАТЕЛЬНОЕ ---
+
 
 class FakeLogger:
     def __init__(self):
         self.messages = []
-    def debug(self, *a, **k): self.messages.append(("DEBUG", a, k))
-    def info(self, *a, **k): self.messages.append(("INFO", a, k))
-    def warning(self, *a, **k): self.messages.append(("WARN", a, k))
-    def error(self, *a, **k): self.messages.append(("ERROR", a, k))
+
+    def debug(self, *a, **k):
+        self.messages.append(("DEBUG", a, k))
+
+    def info(self, *a, **k):
+        self.messages.append(("INFO", a, k))
+
+    def warning(self, *a, **k):
+        self.messages.append(("WARN", a, k))
+
+    def error(self, *a, **k):
+        self.messages.append(("ERROR", a, k))
+
 
 @pytest.fixture
 def logger():
     return FakeLogger()
 
+
 @pytest.fixture
 def fake_time(monkeypatch):
     # Контролируем time.time()
     t = {"now": 1_000_000.0}
-    def _time(): return t["now"]
-    def _sleep(dt): t["now"] += dt
-    import time as _builtin_time
+
+    def _time():
+        return t["now"]
+
+    def _sleep(dt):
+        t["now"] += dt
+
     monkeypatch.setattr("time.time", _time)
     monkeypatch.setattr("time.sleep", _sleep)  # на случай, если используется
     return t
+
 
 @pytest.fixture
 def app():
     # Чистый экземпляр без «грязного» состояния между тестами
     return AppState()
 
+
 # --- RATE LIMIT ---
+
 
 def test_rate_limit_allow_under_limit(app, logger):
     # Первые несколько вызовов должны быть True (точное число не важно)
@@ -39,6 +69,7 @@ def test_rate_limit_allow_under_limit(app, logger):
     assert app.rate_limit_allow(logger) is True
     assert app.rate_limit_allow(logger) is True
     assert app.rate_limit_allow(logger) is True
+
 
 def test_rate_limit_blocks_and_recovers(app, logger, fake_time):
     # Дожимаем до блокировки, не зная констант (с защитой от бесконечного цикла)
@@ -56,7 +87,9 @@ def test_rate_limit_blocks_and_recovers(app, logger, fake_time):
     fake_time["now"] += 61
     assert app.rate_limit_allow(logger) is True
 
+
 # --- CIRCUIT BREAKER ---
+
 
 def test_circuit_opens_after_enough_failures(app):
     # Накапливаем failures, пока не откроется цепь
@@ -68,6 +101,7 @@ def test_circuit_opens_after_enough_failures(app):
             break
     assert opened_on is not None, "цепь не открылась после серии ошибок"
     assert app.cooldown_left() > 0
+
 
 def test_circuit_half_open_after_cooldown(app, fake_time):
     # Открыли цепь
@@ -86,6 +120,7 @@ def test_circuit_half_open_after_cooldown(app, fake_time):
     # После кулдауна блокировка должна сняться (half-open/allow)
     assert app.circuit_blocked() is False
 
+
 def test_circuit_closes_on_success_after_cooldown(app, fake_time):
     # Открыли
     for _ in range(10):
@@ -102,6 +137,7 @@ def test_circuit_closes_on_success_after_cooldown(app, fake_time):
     app.record_success()
     assert app.circuit_blocked() is False
 
+
 def test_sparse_failures_do_not_open_circuit(app):
     # Разреженные ошибки не должны открыть цепь
     app.record_failure()
@@ -110,22 +146,16 @@ def test_sparse_failures_do_not_open_circuit(app):
     assert app.circuit_blocked() is False
 
 
-import time
-
-from lite_upgrade import (
-    rate_limit_allow, circuit_blocked, cooldown_left,
-    record_failure, record_success,
-    _get_state, _reset_state,  # служебные, только для тестов
-    CLIENT_RPM_LIMIT, CB_FAIL_THRESHOLD, CB_COOLDOWN_SEC
-)
-
 class FakeClock:
     def __init__(self, start=1_000_000.0):
         self.t = float(start)
+
     def now(self):
         return self.t
+
     def tick(self, sec):
         self.t += sec
+
 
 @pytest.fixture(autouse=True)
 def clean_state():
@@ -133,16 +163,18 @@ def clean_state():
     yield
     _reset_state()
 
+
 def test_rate_limit_basic_window():
     clk = FakeClock()
     # Разрешаем до лимита включительно
-    for i in range(CLIENT_RPM_LIMIT):
+    for _i in range(CLIENT_RPM_LIMIT):
         assert rate_limit_allow(now_fn=clk.now)
     # Следующий запрос должен быть заблокирован
     assert not rate_limit_allow(now_fn=clk.now)
     # Через 61 сек окно сдвинется — снова можно
     clk.tick(61)
     assert rate_limit_allow(now_fn=clk.now)
+
 
 def test_circuit_opens_on_fail_threshold():
     clk = FakeClock()
@@ -154,6 +186,7 @@ def test_circuit_opens_on_fail_threshold():
     record_failure(now_fn=clk.now)
     assert circuit_blocked(now_fn=clk.now)
     assert cooldown_left(now_fn=clk.now) == CB_COOLDOWN_SEC
+
 
 def test_circuit_counts_down_and_closes():
     clk = FakeClock()
@@ -169,6 +202,7 @@ def test_circuit_counts_down_and_closes():
     assert not circuit_blocked(now_fn=clk.now)
     assert cooldown_left(now_fn=clk.now) == 0
 
+
 def test_record_success_resets_fail_counter():
     clk = FakeClock()
     for _ in range(CB_FAIL_THRESHOLD - 1):
@@ -180,6 +214,7 @@ def test_record_success_resets_fail_counter():
         assert not circuit_blocked(now_fn=clk.now)
     record_failure(now_fn=clk.now)
     assert circuit_blocked(now_fn=clk.now)
+
 
 def test_mixed_rate_limit_and_circuit_independent():
     clk = FakeClock()

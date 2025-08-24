@@ -2,7 +2,8 @@ import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
-def setup_logging(
+
+def setup_logging(  # noqa: PLR0913
     *,
     enabled: bool = True,
     debug: bool = False,

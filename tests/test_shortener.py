@@ -1,6 +1,9 @@
-import pytest
 from concurrent.futures import TimeoutError
+
+import pytest
+
 from lite_upgrade import shorten_via_tinyurl
+
 
 def test_shorten_via_tinyurl_happy_path(monkeypatch, fake_shortener_ok_factory):
     # было: monkeypatch.setattr("pyshorteners.Shortener", lambda: FakeShortener)
@@ -27,18 +30,17 @@ def test_shorten_via_tinyurl_provider_error(monkeypatch, fake_shortener_boom_fac
     assert "boom" in str(excinfo.value)
 
 
-@pytest.mark.parametrize("bad_input", [
-    "",                # пустая строка
-    "   ",             # только пробелы
-    None,              # None
-    "not a url",       # мусор
-    "ftp://example",   # не-HTTP(S) схема
-])
-def test_shorten_via_tinyurl_invalid_input_raises(
-    monkeypatch,
-    fake_shortener_assert_not_called_factory,
-    bad_input
-):
+@pytest.mark.parametrize(
+    "bad_input",
+    [
+        "",  # пустая строка
+        "   ",  # только пробелы
+        None,  # None
+        "not a url",  # мусор
+        "ftp://example",  # не-HTTP(S) схема
+    ],
+)
+def test_shorten_via_tinyurl_invalid_input_raises(monkeypatch, fake_shortener_assert_not_called_factory, bad_input):
     # Подсовываем провайдер, который упадёт, если его вдруг вызовут
     monkeypatch.setattr("pyshorteners.Shortener", fake_shortener_assert_not_called_factory)
 
@@ -54,27 +56,23 @@ def test_shorten_via_tinyurl_strips_spaces(monkeypatch, fake_shortener_ok_factor
 
 
 # В провайдер уходит уже очищенный URL (без пробелов)
-def test_shorten_via_tinyurl_passes_clean_url_to_provider(
-    monkeypatch, fake_shortener_expect_url_factory
-):
+def test_shorten_via_tinyurl_passes_clean_url_to_provider(monkeypatch, fake_shortener_expect_url_factory):
     expected = "https://example.com/x"
     # подсовываем провайдер, который сам проверит входной url
-    monkeypatch.setattr(
-        "pyshorteners.Shortener",
-        lambda: fake_shortener_expect_url_factory(expected)
-    )
+    monkeypatch.setattr("pyshorteners.Shortener", lambda: fake_shortener_expect_url_factory(expected))
     out = shorten_via_tinyurl("   https://example.com/x   ", timeout=0.5)
     assert out == "https://tiny.one/abc123"
 
 
 # Поддерживаются и http, и https
-@pytest.mark.parametrize("url", [
-    "http://example.com/a",
-    "https://example.com/b",
-])
-def test_shorten_via_tinyurl_accepts_http_and_https(
-    monkeypatch, fake_shortener_ok_factory, url
-):
+@pytest.mark.parametrize(
+    "url",
+    [
+        "http://example.com/a",
+        "https://example.com/b",
+    ],
+)
+def test_shorten_via_tinyurl_accepts_http_and_https(monkeypatch, fake_shortener_ok_factory, url):
     monkeypatch.setattr("pyshorteners.Shortener", fake_shortener_ok_factory)
     out = shorten_via_tinyurl(url, timeout=0.2)
     assert out == "https://tiny.one/abc123"
@@ -104,18 +102,23 @@ def test_shorten_via_tinyurl_returns_provider_output(monkeypatch):
     class FakeTiny:
         def short(self, url: str) -> str:
             return "https://tiny.one/custom123?x=1#frag"
+
     class FakeShortener:
         tinyurl = FakeTiny()
+
     monkeypatch.setattr("pyshorteners.Shortener", lambda: FakeShortener())
 
     out = shorten_via_tinyurl("https://example.com/abc", timeout=0.2)
     assert out == "https://tiny.one/custom123?x=1#frag"
 
 
-@pytest.mark.parametrize("url", [
-    "https://example.com/привет",
-    "https://пример.рф/страница",
-])
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://example.com/привет",
+        "https://пример.рф/страница",
+    ],
+)
 def test_shorten_via_tinyurl_handles_unicode(monkeypatch, fake_shortener_ok_factory, url):
     monkeypatch.setattr("pyshorteners.Shortener", fake_shortener_ok_factory)
     out = shorten_via_tinyurl(url, timeout=0.2)
