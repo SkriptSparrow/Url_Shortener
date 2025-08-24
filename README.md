@@ -7,7 +7,7 @@
 ## 🔽 Загрузка
 
 Windows: скачай готовый UrlCutter.exe из раздела Releases:
-➡️ Latest release
+➡️ [Latest release](https://github.com/SkriptSparrow/Url_Shortener/releases/latest).
 
 Файл подписан как UrlCutter.exe. Если Windows SmartScreen спросит, подтвердите запуск.
 
@@ -89,8 +89,9 @@ pyinstaller lite_upgrade.py --name UrlCutter --windowed --onefile ^
 
 ## 📦 История версий
 
-Смотри Releases
+Смотри [Releases](https://github.com/SkriptSparrow/Url_Shortener/releases).
 
+Скачать последнюю версию: [➡️ Latest release](https://github.com/SkriptSparrow/Url_Shortener/releases/latest)
 ---
 
 
