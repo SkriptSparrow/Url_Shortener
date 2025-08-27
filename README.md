@@ -83,7 +83,7 @@ pyinstaller lite_upgrade.py --name UrlCutter --windowed --onefile ^
 
 ## 📸 Скриншоты
 
-![Вид приложения](https://ibb.co/V00TmSm9/url-cutter.png)
+![Вид приложения](https://ibb.co/V00TmSm9)
 
 ---
 
