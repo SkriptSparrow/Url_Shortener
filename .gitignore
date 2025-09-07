@@ -56,3 +56,7 @@ scripts/packaging/
 # случайные файлы
 /tash apply stash@{0}
 /njrty.txt
+
+$null
+alembic_dev_history.db
+tree.txt
