@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import csv
+import io
 from datetime import UTC, datetime, time
 
 from sqlalchemy import func, or_, select
@@ -137,7 +139,8 @@ class SqlAlchemyHistoryService(HistoryService):
                     copy_count=record.copy_count or 0,
                 )
                 s.add(obj)
-                s.flush()  # получить id/created_at
+                s.flush()  # получаем id и created_at
+                s.commit()  # << вот этого раньше не было
                 stored = LinkRecord(
                     id=obj.id,
                     long_url=obj.long_url,
@@ -159,18 +162,21 @@ class SqlAlchemyHistoryService(HistoryService):
                 if not obj:
                     raise NotFoundError(f"id={id} not found")
                 obj.copy_count += 1
+                s.commit()
         except SQLAlchemyError as e:
             raise StorageError(str(e)) from e
 
-    def delete(self, id: int) -> None:
+    def delete(self, id: int) -> bool:
         if not isinstance(id, int) or id <= 0:
             raise ValidationError("Invalid id")
         try:
             with get_session() as s:
                 obj = s.get(Link, id)
                 if not obj:
-                    raise NotFoundError(f"id={id} not found")
+                    return False
                 s.delete(obj)
+                s.commit()  # ← этот commit оставляем
+                return True
         except SQLAlchemyError as e:
             raise StorageError(str(e)) from e
 
@@ -189,10 +195,6 @@ class SqlAlchemyHistoryService(HistoryService):
                 rows: list[Link] = s.execute(stmt).scalars().all()
         except SQLAlchemyError as e:
             raise StorageError(str(e)) from e
-
-        # формируем CSV (в памяти)
-        import csv
-        import io
 
         buf = io.StringIO(newline="")
         writer = csv.writer(buf, delimiter=",", quoting=csv.QUOTE_MINIMAL)

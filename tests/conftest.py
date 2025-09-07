@@ -1,6 +1,12 @@
 from concurrent.futures import TimeoutError
+from contextlib import contextmanager
 
 import pytest
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+from urlcutter.db.models import Base
+from urlcutter.db.repo import history_sql
 
 
 @pytest.fixture
@@ -123,3 +129,27 @@ def fake_pool_capturing_timeout_factory():
         return FakePool(), captured
 
     return _factory
+
+
+@pytest.fixture(scope="function")
+def db_session():
+    """Создаёт чистую in-memory SQLite БД для каждого теста."""
+    engine = create_engine("sqlite:///:memory:", echo=False, future=True)
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    try:
+        yield session
+    finally:
+        session.close()
+        engine.dispose()
+
+
+@pytest.fixture(autouse=True)
+def patch_get_session(monkeypatch, db_session):
+
+    @contextmanager
+    def fake_get_session():
+        yield db_session
+
+    monkeypatch.setattr(history_sql, "get_session", fake_get_session)

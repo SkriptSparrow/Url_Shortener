@@ -3,7 +3,7 @@ import pytest
 ui = pytest.importorskip("urlcutter.ui_builders")  # пропустить тест, если нет модуля
 
 
-TITLE_BAR_LEN = 4
+TITLE_BAR_LEN = 5
 INPUTS_LEN = 2
 BUTTONS_LEN = 4
 

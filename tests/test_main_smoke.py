@@ -51,8 +51,9 @@ def fake_build_header():
     return object()
 
 
-def fake_build_title_bar():
-    return "row", Btn(), Btn(), Btn()
+def fake_build_title_bar(*, t=None, on_open_history=None, on_open_info=None, on_minimize=None, on_close=None):
+    # возвращаем tuple из 5 элементов, как настоящий build_title_bar
+    return ("row", "info_btn", "minimize_btn", "close_btn", "drag_area")
 
 
 def fake_build_inputs():
@@ -67,7 +68,7 @@ def fake_build_footer():
     return object()
 
 
-def fake_compose_page(*_args):
+def fake_compose_page(*args, **kwargs):
     return "ROOT"
 
 
@@ -103,6 +104,10 @@ class FakeHandlers:
         pass
 
     def on_close(self, *_):
+        pass
+
+    # новый метод для теста истории
+    def on_open_history(self, *_):
         pass
 
 
