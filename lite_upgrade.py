@@ -100,30 +100,28 @@ def shorten_via_tinyurl(
 # 8) Точка входа (инициализация и «провода»)
 def main(page):  # можно без аннотации, чтобы не держать Flet на импорте
     # локальные импорты — так тестовый monkeypatch перехватывает их корректно
+    import flet as ft  # NEW: нужен для Container
+
     import urlcutter.ui_builders as U  # noqa: PLC0415
+    from urlcutter.db.migrate import upgrade_to_head  # noqa: PLC0415
     from urlcutter.handlers import Handlers  # noqa: PLC0415
+
+    upgrade_to_head()
 
     logger = setup_logging(enabled=LOG_ENABLED, debug=LOG_DEBUG)
     U.configure_window_and_theme(page)
 
+    # --- строим основной UI шортенера (как раньше) ---
     header_col = U.build_header()
-    title_bar, info_btn, minimize_btn, close_btn = U.build_title_bar()
     url_input_field, short_url_field = U.build_inputs()
     button_row, shorten_button, clear_button, copy_button = U.build_buttons()
     footer_container = U.build_footer()
 
-    root = U.compose_page(
-        title_bar,
-        header_col,
-        url_input_field,
-        short_url_field,
-        button_row,
-        footer_container,
-    )
-    page.add(root)
+    # --- центральная область, куда подставляется контент (шортенер ИЛИ история) ---
+    main_body = ft.Container(expand=True)
 
+    # --- ui-алиасы и состояние (как у тебя было) ---
     ui = SimpleNamespace(
-        # даём оба алиаса для каждого поля — подойдут и боевому Handlers, и FakeHandlers
         url_input_field=url_input_field,
         url_inp=url_input_field,
         short_url_field=short_url_field,
@@ -131,8 +129,8 @@ def main(page):  # можно без аннотации, чтобы не дер�
         shorten_button=shorten_button,
         shorten_btn=shorten_button,
     )
-
     state = AppState()
+
     params = {
         "page": page,
         "logger": logger,
@@ -147,23 +145,51 @@ def main(page):  # можно без аннотации, чтобы не дер�
         "ui": ui,
     }
 
+    # --- создаём handlers ДО title_bar, чтобы сразу передать его методы в меню ---
     try:
         sig = inspect.signature(Handlers.__init__)
     except (TypeError, ValueError):
         sig = inspect.signature(Handlers)
-
     kwargs = {name: params[name] for name in sig.parameters if name != "self" and name in params}
-
     handlers = Handlers(**kwargs)
 
+    # даём обработчику доступ к центральной области для показа «Истории»
+    if hasattr(handlers, "attach_main_body"):
+        handlers.attach_main_body(main_body)
+
+    # 1) собираем title bar (ТЕПЕРЬ 5 значений)
+    title_row, info_btn, minimize_btn, close_btn, drag_area = U.build_title_bar(
+        t=lambda k: k,
+        on_open_history=handlers.on_open_history,
+        on_open_info=handlers.on_open_info,
+        on_minimize=handlers.on_minimize,
+        on_close=handlers.on_close,
+    )
+
+    # 2) собираем стартовый экран
+    root = U.compose_page(
+        title_bar=title_row,
+        header_col=header_col,
+        url_input_field=url_input_field,
+        short_url_field=short_url_field,
+        button_row=button_row,
+        footer_container=footer_container,
+        main_body=main_body,
+    )
+    page.add(root)
+
+    # 3) сохраним ссылки в handlers, чтобы переключать бар в on_open_history/_back_to_saved_view
+    handlers.title_row = title_row
+    handlers.info_btn = info_btn
+    handlers.minimize_btn = minimize_btn
+    handlers.close_btn = close_btn
+    handlers.drag_area = drag_area
+
+    # 4) бинды кнопок как у тебя
     url_input_field.suffix.on_click = handlers.on_paste
     shorten_button.on_click = handlers.on_shorten
     clear_button.on_click = handlers.on_clear
     copy_button.on_click = handlers.on_copy
-
-    info_btn.on_click = handlers.on_open_info
-    minimize_btn.on_click = handlers.on_minimize
-    close_btn.on_click = handlers.on_close
 
     page.update()
 

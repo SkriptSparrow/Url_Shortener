@@ -22,17 +22,52 @@ def configure_window_and_theme(page: ft.Page):
     page.fonts = {"Rubik": str(font_path)}
 
 
-def build_title_bar() -> tuple[ft.Row, ft.IconButton, ft.IconButton, ft.IconButton]:
-    close_button = ft.IconButton(ft.Icons.CLOSE)
-    info_button = ft.IconButton(ft.Icons.MENU)
-    minimize_button = ft.IconButton(ft.Icons.REMOVE)
+def build_title_bar(
+    *,
+    t=lambda k: k,
+    on_open_history=None,
+    on_open_info=None,
+    on_minimize=None,
+    on_close=None,
+) -> tuple[ft.Row, ft.IconButton | ft.PopupMenuButton, ft.IconButton, ft.IconButton, ft.WindowDragArea]:
+    """Верхняя полоса с меню ≡, перетаскиванием окна и кнопками мин/закрыть."""
+    info_button = ft.PopupMenuButton(
+        icon=ft.Icons.MENU,
+        items=[
+            ft.PopupMenuItem(text=t("Link History"), on_click=lambda e: on_open_history and on_open_history(e)),
+            ft.PopupMenuItem(text=t("About the developer"), on_click=lambda e: on_open_info and on_open_info(e)),
+        ],
+    )
+    # стандартные кнопки окна
+    minimize_button = ft.IconButton(ft.Icons.REMOVE, on_click=on_minimize)
+    close_button = ft.IconButton(ft.Icons.CLOSE, on_click=on_close)
+
     drag_area = ft.WindowDragArea(ft.Container(height=50, width=1000), expand=True, maximizable=False)
     row = ft.Row(
         controls=[info_button, drag_area, minimize_button, close_button],
         alignment=ft.MainAxisAlignment.END,
         vertical_alignment=ft.CrossAxisAlignment.CENTER,
     )
-    return row, info_button, minimize_button, close_button
+    return row, info_button, minimize_button, close_button, drag_area
+
+
+def titlebar_set_main(
+    row: ft.Row,
+    info_button: ft.Control,
+    minimize_button: ft.IconButton,
+    close_button: ft.IconButton,
+    drag_area: ft.WindowDragArea,
+):
+    row.controls = [info_button, drag_area, minimize_button, close_button]
+    row.update()
+
+
+def titlebar_set_back(
+    row: ft.Row, on_back, minimize_button: ft.IconButton, close_button: ft.IconButton, drag_area: ft.WindowDragArea
+):
+    back_btn = ft.IconButton(ft.Icons.ARROW_BACK, tooltip="Back", on_click=on_back)
+    row.controls = [back_btn, drag_area, minimize_button, close_button]
+    row.update()
 
 
 def build_header() -> ft.Column:
@@ -135,15 +170,29 @@ def build_footer() -> ft.Column:
     )
 
 
-def compose_page(title_bar, header_col, url_input_field, short_url_field, button_row, footer_container) -> ft.Column:
+def compose_page(
+    title_bar,
+    header_col,
+    url_input_field,
+    short_url_field,
+    button_row,
+    footer_container,
+    *,
+    main_body: ft.Container | None = None,
+) -> ft.Column:
+    """Собирает вид основной страницы: title_bar сверху, контент внутри main_body."""
+    # Отступы как раньше
     margin_top = ft.Container(height=100, width=400)
     margin_middle = ft.Container(height=25, width=400)
     margin_bottom = ft.Container(height=5, width=400)
     margin_bottom1 = ft.Container(height=5, width=400)
 
-    content = ft.Column(
+    if main_body is None:
+        main_body = ft.Container(expand=True)
+
+    # Стартовый контент шортенера (БЕЗ title_bar!)
+    shortener_layout = ft.Column(
         controls=[
-            title_bar,
             margin_top,
             header_col,
             margin_middle,
@@ -158,8 +207,14 @@ def compose_page(title_bar, header_col, url_input_field, short_url_field, button
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         spacing=10,
     )
+
+    # Кладём шортенер в центральную область
+    main_body.content = shortener_layout
+
+    # Возвращаем общий вертикальный контейнер: title_bar + центральная область
     return ft.Column(
-        controls=[content],
-        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+        controls=[title_bar, main_body],
+        alignment=ft.MainAxisAlignment.START,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        spacing=0,
     )

@@ -1,3 +1,25 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "urlcutter"
+version = "0.1.0"
+description = "Tiny URL shortener app with history"
+requires-python = ">=3.10"
+dependencies = [
+  "SQLAlchemy>=2.0",
+  "alembic>=1.13",
+  # опционально, если хочешь фиксировать и эти рантайм-зависимости:
+  # "flet>=0.20",
+  # "validators>=0.20",
+  # "pyperclip>=1.8"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["urlcutter*"]
+
 [tool.black]
 line-length = 120
 target-version = ["py311"]
