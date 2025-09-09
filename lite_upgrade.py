@@ -9,6 +9,7 @@ from types import SimpleNamespace
 
 import pyshorteners
 
+import urlcutter.patches.fix_alembic_version  # noqa: F401
 from urlcutter import shorten_via_tinyurl_core as _shorten_core
 from urlcutter.logging_utils import setup_logging
 from urlcutter.normalization import _url_fingerprint, normalize_url

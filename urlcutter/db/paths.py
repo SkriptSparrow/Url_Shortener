@@ -61,9 +61,9 @@ def alembic_dir() -> Path:
 
     Resolution order:
       1) Env override URLCUTTER_ALEMBIC_DIR (absolute path).
-      2) Frozen app: <_MEIPASS>/alembic (bundled with PyInstaller).
-      3) Dev: <project_root>/alembic  (project_root = ../../ from this file).
-      4) Fallback: <user_data_dir>/alembic (will be created if missing).
+      2) Frozen app: <_MEIPASS>/alembic_migrations (bundled with PyInstaller).
+      3) Dev: <project_root>/alembic_migrations
+      4) Fallback: <user_data_dir>/alembic_migrations (will be created if missing).
     """
     override = os.getenv("URLCUTTER_ALEMBIC_DIR")
     if override:
@@ -72,17 +72,17 @@ def alembic_dir() -> Path:
             return p
 
     if _is_frozen():
-        p = Path(sys._MEIPASS) / "alembic"  # type: ignore[attr-defined]
+        p = Path(sys._MEIPASS) / "alembic_migrations"  # type: ignore[attr-defined]
         if p.exists():
             return p
 
     # This file is urlcutter/db/paths.py → project root is parents[2]
     project_root = Path(__file__).resolve().parents[2]
-    p = project_root / "alembic"
+    p = project_root / "alembic_migrations"
     if p.exists():
         return p
 
     # Last-resort fallback
-    p = user_data_dir() / "alembic"
+    p = user_data_dir() / "alembic_migrations"
     p.mkdir(parents=True, exist_ok=True)
     return p

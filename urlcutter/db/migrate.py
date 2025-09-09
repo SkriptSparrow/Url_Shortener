@@ -20,7 +20,7 @@ def upgrade_to_head() -> None:
     """
     # Попробуем найти корневой ini (обычный dev-случай: <project_root>/alembic.ini)
     project_root = Path(__file__).resolve().parents[2]
-    root_ini = project_root / "alembic.ini"
+    root_ini = project_root / "alembic_migrations" / "alembic.ini"
 
     cfg = Config(str(root_ini)) if root_ini.exists() else Config()
 

@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from logging.config import fileConfig
 
+from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from alembic import context
 from urlcutter.db.models import Base
 
 # ⬇ NEW: берём путь к БД из приложения
