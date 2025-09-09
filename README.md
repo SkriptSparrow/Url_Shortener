@@ -1,48 +1,74 @@
 # URL Cutter
 
-Удобное приложение для сокращения длинных URL, написанное на Python с использованием библиотеки Flet.
+A convenient desktop application for shortening long URLs, built with Python and Flet.
 
 ---
 
-## 🚀 Функционал
+## 🚀 Features
 
-- Ввод длинного URL и получение короткой версии.
-- Используется библиотека `pyshorteners` (TinyURL) для сокращения ссылок.
-- Копирование короткой ссылки в буфер обмена.
-- Очистка полей ввода.
-- Интуитивно понятный и минималистичный интерфейс.
+- Input a long URL and instantly get a shortened version.  
+- Uses `pyshorteners` (TinyURL) as the shortening backend.  
+- Copy shortened links directly to the clipboard.  
+- Clear input fields with a single click.  
+- **New in v0.2.0:**  
+  - History window with table view of shortened links.  
+  - Search and filtering by URL, service, or date.  
+  - Customizable table columns.  
+- Responsive and minimalist interface.  
 
 ---
 
-## 🛠 Технологии
+## 🛠 Technologies
 
 - Python  
-- Flet (для создания GUI)  
-- pyshorteners (для сокращения URL)  
+- Flet (for GUI)  
+- pyshorteners (for URL shortening)  
+- SQLAlchemy + Alembic (for history storage and migrations)  
 
 ---
 
-## ⚙️ Как запустить
+## ⚙️ How to Run
 
-1. Склонируйте репозиторий:  
+1. Clone the repository:  
 
-git clone https://github.com/yourusername/URLCutter.git
+```bash
+git clone https://github.com/SkriptSparrow/Url_Shortener.git
+cd Url_Shortener
+```
 
-2. Установите зависимости:
+2. Install dependencies:
 
+```bash
 pip install flet pyshorteners
+```
 
-3. Запустите приложение:
+3. Run the app:
 
+```bash
 python url_cutter.py
+```
 
-## 📸 Скриншоты
+## 📸 Screenshots
 
-![Вид приложения](https://i.ibb.co/LXN1Z5dq/app.png)
+Main window
 
-## 📫 Контакты
+![Main window](https://ibb.co/zW8BMznT)
+
+Dropdown menu
+
+![Dropdown menu](https://ibb.co/GYBKKDV)
+
+History window
+
+![History window](https://ibb.co/JW9JT54k)
+
+## Download
+
+You can download the latest `.exe` build from the [Releases](https://github.com/SkriptSparrow/Url_Shortener/releases) page.
+
+## 📫 Contacts
 
 * **Telegram:** [@Alex\_Gicheva](https://t.me/Alex_Gicheva)
 * **Email:** [alexgicheva@gmail.com](mailto:alexgicheva@gmail.com)
 
-✨ Спасибо за внимание! Надеюсь, это приложение сделает работу с URL удобнее и быстрее.
+✨ Thank you for using URL Cutter! We hope it makes your workflow faster and easier.
