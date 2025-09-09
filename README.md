@@ -52,15 +52,15 @@ python url_cutter.py
 
 Main window
 
-![Main window](https://ibb.co/zW8BMznT)
+![Main window](https://i.ibb.co/8nzfCHKL/Screenshot-0.jpg)
 
 Dropdown menu
 
-![Dropdown menu](https://ibb.co/GYBKKDV)
+![Dropdown menu](https://i.ibb.co/tjk776b/Screenshot-1.jpg)
 
 History window
 
-![History window](https://ibb.co/JW9JT54k)
+![History window](https://i.ibb.co/GfqSDcLP/Screenshot-2.jpg)
 
 ## Download
 
