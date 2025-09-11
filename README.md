@@ -6,30 +6,30 @@ A convenient desktop application for shortening long URLs, built with Python and
 
 ## 🚀 Features
 
-- Input a long URL and instantly get a shortened version.  
-- Uses `pyshorteners` (TinyURL) as the shortening backend.  
-- Copy shortened links directly to the clipboard.  
-- Clear input fields with a single click.  
-- **New in v0.2.0:**  
-  - History window with table view of shortened links.  
-  - Search and filtering by URL, service, or date.  
-  - Customizable table columns.  
-- Responsive and minimalist interface.  
+- Input a long URL and instantly get a shortened version.
+- Uses `pyshorteners` (TinyURL) as the shortening backend.
+- Copy shortened links directly to the clipboard.
+- Clear input fields with a single click.
+- **New in v0.2.0:**
+  - History window with table view of shortened links.
+  - Search and filtering by URL, service, or date.
+  - Customizable table columns.
+- Responsive and minimalist interface.
 
 ---
 
 ## 🛠 Technologies
 
-- Python  
-- Flet (for GUI)  
-- pyshorteners (for URL shortening)  
-- SQLAlchemy + Alembic (for history storage and migrations)  
+- Python
+- Flet (for GUI)
+- pyshorteners (for URL shortening)
+- SQLAlchemy + Alembic (for history storage and migrations)
 
 ---
 
 ## ⚙️ How to Run
 
-1. Clone the repository:  
+1. Clone the repository:
 
 ```bash
 git clone https://github.com/SkriptSparrow/Url_Shortener.git
@@ -75,6 +75,5 @@ You can download the latest `.exe` build from the [Releases](https://github.com/
 
 * **Telegram:** [@Alex\_Gicheva](https://t.me/Alex_Gicheva)
 * **Email:** [alexgicheva@gmail.com](mailto:alexgicheva@gmail.com)
-
 
 ✨ Thank you for using URL Cutter! We hope it makes your workflow faster and easier.
