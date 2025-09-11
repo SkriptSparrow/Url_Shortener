@@ -1,5 +1,5 @@
 import types
-import pytest
+from dataclasses import dataclass
 
 import lite_upgrade
 
@@ -24,7 +24,9 @@ class DummyPage:
 
 # примитивные контролы с нужными полями on_click
 class Btn:
-    def __init__(self): self.on_click = None
+    def __init__(self):
+        self.on_click = None
+
 
 class Field:
     def __init__(self):
@@ -33,33 +35,80 @@ class Field:
         self.value = ""
         self.visible = True
         self.disabled = False
-        def _noop(): pass
+
+        def _noop():
+            pass
+
         self.update = _noop
 
 
 # билдеры, которые вернут то, что ждёт main()
-def fake_configure(page): pass
-def fake_build_header(): return object()
-def fake_build_title_bar(): return "row", Btn(), Btn(), Btn()
-def fake_build_inputs(): return Field(), Field()
-def fake_build_buttons(): return "row", Btn(), Btn(), Btn()
-def fake_build_footer(): return object()
-def fake_compose_page(*_args): return "ROOT"
+def fake_configure(page):
+    pass
+
+
+def fake_build_header():
+    return object()
+
+
+def fake_build_title_bar(*, t=None, on_open_history=None, on_open_info=None, on_minimize=None, on_close=None):
+    # возвращаем tuple из 5 элементов, как настоящий build_title_bar
+    return ("row", "info_btn", "minimize_btn", "close_btn", "drag_area")
+
+
+def fake_build_inputs():
+    return Field(), Field()
+
+
+def fake_build_buttons():
+    return "row", Btn(), Btn(), Btn()
+
+
+def fake_build_footer():
+    return object()
+
+
+def fake_compose_page(*args, **kwargs):
+    return "ROOT"
+
+
+@dataclass
+class UIElements:
+    url_inp: str
+    short_out: str
+    shorten_btn: str
 
 
 # Хэндлер, который просто предоставляет нужные методы
 class FakeHandlers:
-    def __init__(self, page, logger, state, url_inp, short_out, shorten_btn):
-        self.bound = (page, logger, state, url_inp, short_out, shorten_btn)
+    def __init__(self, page, logger, state, ui: UIElements):
+        self.bound = (page, logger, state, ui)
 
     # методы, к которым привяжутся on_click
-    def on_paste(self, *_): pass
-    def on_shorten(self, *_): pass
-    def on_clear(self, *_): pass
-    def on_copy(self, *_): pass
-    def on_open_info(self, *_): pass
-    def on_minimize(self, *_): pass
-    def on_close(self, *_): pass
+    def on_paste(self, *_):
+        pass
+
+    def on_shorten(self, *_):
+        pass
+
+    def on_clear(self, *_):
+        pass
+
+    def on_copy(self, *_):
+        pass
+
+    def on_open_info(self, *_):
+        pass
+
+    def on_minimize(self, *_):
+        pass
+
+    def on_close(self, *_):
+        pass
+
+    # новый метод для теста истории
+    def on_open_history(self, *_):
+        pass
 
 
 def test_main_smoke(monkeypatch):

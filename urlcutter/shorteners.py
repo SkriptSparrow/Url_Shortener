@@ -7,6 +7,8 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
+from functools import partial
+from http import HTTPStatus
 
 # stdlib
 from urllib.parse import quote, urlparse
@@ -20,6 +22,12 @@ from urlcutter import normalize_url
 __all__ = ["shorten_via_tinyurl_core"]
 
 DEFAULT_HTTP_TIMEOUT = 5
+
+
+try:
+    import pyshorteners
+except Exception:
+    pyshorteners = None
 
 
 def _looks_like_url(s: str) -> bool:
@@ -64,7 +72,7 @@ def shorten_via_tinyurl_core(
         except Exception as e:
             raise RuntimeError(f"TinyURL request failed: {e}") from e
 
-        if getattr(resp, "status_code", 200) != 200:
+        if getattr(resp, "status_code", HTTPStatus.OK) != HTTPStatus.OK:
             raise RuntimeError(f"TinyURL HTTP {resp.status_code}")
 
         short = getattr(resp, "text", "").strip()
@@ -76,8 +84,8 @@ def shorten_via_tinyurl_core(
     try:
         shortener_factory = _shortener_factory
         if shortener_factory is None:
-            import pyshorteners  # local import to avoid unused dep when not needed
-
+            if pyshorteners is None:
+                raise RuntimeError("pyshorteners is required for TinyURL but is not installed.")
             shortener_factory = pyshorteners.Shortener
 
         shortener = shortener_factory()
@@ -88,8 +96,6 @@ def shorten_via_tinyurl_core(
 
         pool_factory = _pool_factory or ThreadPoolExecutor
         with pool_factory(max_workers=1) as pool:
-            from functools import partial
-
             fut = pool.submit(partial(tiny.short, norm))
             return fut.result(timeout=timeout)
 

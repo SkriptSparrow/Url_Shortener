@@ -47,6 +47,7 @@ pip install flet pyshorteners
 ```bash
 python url_cutter.py
 ```
+---
 
 ## 📸 Screenshots
 
@@ -62,13 +63,18 @@ History window
 
 ![History window](https://i.ibb.co/GfqSDcLP/Screenshot-2.jpg)
 
+---
+
 ## Download
 
 You can download the latest `.exe` build from the [Releases](https://github.com/SkriptSparrow/Url_Shortener/releases) page.
+
+---
 
 ## 📫 Contacts
 
 * **Telegram:** [@Alex\_Gicheva](https://t.me/Alex_Gicheva)
 * **Email:** [alexgicheva@gmail.com](mailto:alexgicheva@gmail.com)
+
 
 ✨ Thank you for using URL Cutter! We hope it makes your workflow faster and easier.
