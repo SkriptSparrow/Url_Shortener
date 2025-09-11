@@ -1,104 +1,80 @@
 # URL Cutter
 
-A convenient desktop application for shortening long URLs in Python (GUI - Flet, shortener - TinyURL).
+A convenient desktop application for shortening long URLs, built with Python and Flet.
 
 ---
 
-## 🔽 Loading
+## 🚀 Features
 
-Windows: download the ready UrlCutter.exe from the Releases section:
-➡️ [Latest release](https://github.com/SkriptSparrow/Url_Shortener/releases/latest).
-
-The file is signed as UrlCutter.exe. If Windows SmartScreen asks, confirm the launch.
-
----
-
-## ✨ Possibilities
-
-- Enter long URL → get short link (TinyURL).
-- Copy the result to the clipboard, clear the fields.
-- Simple URL validation and error reporting.
-- Small "protections": local rate-limit, internet check, careful timeouts.
+- Input a long URL and instantly get a shortened version.  
+- Uses `pyshorteners` (TinyURL) as the shortening backend.  
+- Copy shortened links directly to the clipboard.  
+- Clear input fields with a single click.  
+- **New in v0.2.0:**  
+  - History window with table view of shortened links.  
+  - Search and filtering by URL, service, or date.  
+  - Customizable table columns.  
+- Responsive and minimalist interface.  
 
 ---
 
 ## 🛠 Technologies
 
-- Python 3.13 (compatible with 3.11+)
-- Flet — cross-platform GUI
-- pyshorteners (TinyURL provider)
-- PyInstaller (for building .exe)
+- Python  
+- Flet (for GUI)  
+- pyshorteners (for URL shortening)  
+- SQLAlchemy + Alembic (for history storage and migrations)  
 
 ---
 
-## ▶️ Run from source
+## ⚙️ How to Run
+
+1. Clone the repository:  
+
 ```bash
 git clone https://github.com/SkriptSparrow/Url_Shortener.git
 cd Url_Shortener
-python -m venv .venv && .venv\Scripts\activate
-pip install -r requirements.txt
-python lite_upgrade.py
 ```
 
----
+2. Install dependencies:
 
-## 🧪 Development
 ```bash
-# тесты
-pytest -q
-
-# linters / formatters
-ruff check --fix
-black .
-pre-commit run --all-files
+pip install flet pyshorteners
 ```
 
----
+3. Run the app:
 
-## 🏗 Assembling .exe (PyInstaller)
-
-OneDir (to check assets):
-
-```powershell
-pyinstaller lite_upgrade.py --name UrlCutter --windowed --onedir ^
-  --icon "urlcutter/assets/img/app.ico" ^
-  --collect-data urlcutter ^
-  --add-data "urlcutter/assets;urlcutter/assets"
+```bash
+python url_cutter.py
 ```
-
-
-OneFile (one file):
-
-```powershell
-pyinstaller lite_upgrade.py --name UrlCutter --windowed --onefile ^
-  --icon "urlcutter/assets/img/app.ico" ^
-  --collect-data urlcutter ^
-  --add-data "urlcutter/assets;urlcutter/assets"
-```
-
-Assets (window icon, images, fonts) are packed into a bundle at urlcutter/assets/....
-The code uses safe path retrieval for both dev and .exe.
-
 ---
 
 ## 📸 Screenshots
 
-![Вид приложения](https://i.ibb.co/xKK6HjHL/url-cutter.jpg)
+Main window
+
+![Main window](https://i.ibb.co/8nzfCHKL/Screenshot-0.jpg)
+
+Dropdown menu
+
+![Dropdown menu](https://i.ibb.co/tjk776b/Screenshot-1.jpg)
+
+History window
+
+![History window](https://i.ibb.co/GfqSDcLP/Screenshot-2.jpg)
 
 ---
 
-## 📦 Version history
+## Download
 
-Look [Releases](https://github.com/SkriptSparrow/Url_Shortener/releases).
-
-Download the latest version: [➡️ Latest release](https://github.com/SkriptSparrow/Url_Shortener/releases/latest)
+You can download the latest `.exe` build from the [Releases](https://github.com/SkriptSparrow/Url_Shortener/releases) page.
 
 ---
-
 
 ## 📫 Contacts
 
 * **Telegram:** [@Alex\_Gicheva](https://t.me/Alex_Gicheva)
 * **Email:** [alexgicheva@gmail.com](mailto:alexgicheva@gmail.com)
 
-✨ Thank you for your attention! I hope this application will make working with URLs more convenient and faster.
+
+✨ Thank you for using URL Cutter! We hope it makes your workflow faster and easier.
