@@ -1,3 +1,5 @@
+![CI](https://github.com/SkriptSparrow/PasswordGenerator/actions/workflows/ci.yml/badge.svg)
+
 # URL Cutter
 
 A convenient desktop application for shortening long URLs, built with Python and Flet.
