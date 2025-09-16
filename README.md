@@ -76,5 +76,4 @@ You can download the latest `.exe` build from the [Releases](https://github.com/
 * **Telegram:** [@Alex\_Gicheva](https://t.me/Alex_Gicheva)
 * **Email:** [alexgicheva@gmail.com](mailto:alexgicheva@gmail.com)
 
-
 ✨ Thank you for using URL Cutter! We hope it makes your workflow faster and easier.
