@@ -44,7 +44,7 @@ def test_alembic_dir_with_override(monkeypatch, tmp_path):
 
 
 def test_alembic_dir_with_frozen(monkeypatch, tmp_path):
-    alembic_dir = tmp_path / "alembic"
+    alembic_dir = tmp_path / "alembic_migrations"
     alembic_dir.mkdir()
     monkeypatch.delenv("URLCUTTER_ALEMBIC_DIR", raising=False)
     monkeypatch.setattr(paths, "_is_frozen", lambda: True)
@@ -55,7 +55,7 @@ def test_alembic_dir_with_frozen(monkeypatch, tmp_path):
 
 def test_alembic_dir_with_project_root(monkeypatch, tmp_path):
     project_root = tmp_path / "proj"
-    alembic_dir = project_root / "alembic"
+    alembic_dir = project_root / "alembic_migrations"
     alembic_dir.mkdir(parents=True)
     monkeypatch.delenv("URLCUTTER_ALEMBIC_DIR", raising=False)
     monkeypatch.setattr(paths, "_is_frozen", lambda: False)
